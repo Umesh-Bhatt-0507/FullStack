@@ -8,8 +8,10 @@
 // 7. CLear a post
 
 import { configureStore } from '@reduxjs/toolkit'
-import todoReducer from "../features/post/postSlice";
+import postReducer from "../features/post/postSlice";
 
 export const store=configureStore({
-    reducer:postReducer,
+    reducer:{
+        post:postReducer,
+    },
 });

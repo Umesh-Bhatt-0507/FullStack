@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import DraftPage from "./DraftPage";
 import {v4 as uuidv4} from 'uuid'
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+    addPlatform,
+    removePlatform,
+    setPost,
+    clearPost,
+    saveDrafts,
+    deleteDraft,
+    editDrafts,
+} from "../../features/post/postSlice";
 
 export default function LandingPage(){
     const limits = {
@@ -8,9 +19,10 @@ export default function LandingPage(){
         instagram: 2200,
         facebook: 3000,
     };
-    let [platform,setPlatform]=useState([]);
-    let [post,setPost]=useState("");
-    let [draft,setDraft]=useState([]);
+    const dispatch = useDispatch();
+    const {platform,post,drafts } = useSelector(
+        (state) => state.post
+    );
     const count=post.length;
     
     const min=Math.min(...platform.map((item)=> limits[item]));
@@ -18,41 +30,28 @@ export default function LandingPage(){
     let handlePlatform=(event)=>{
         const {value,checked}=event.target;
         if(checked){
-            setPlatform((prev)=> [...prev,value]);
+            dispatch(addPlatform(value));
         }else{
-            setPlatform((prev)=> prev.filter((item) => item!==value));
+            dispatch(removePlatform(value));
         }
     }
     let handleChange=(event)=>{
-        setPost(event.target.value);
+        dispatch(setPost(event.target.value));
     }
     let handleSubmit=(event)=>{
         event.preventDefault();
         alert("Post submitted successfully!");
-        setPlatform([]);
-        setPost("");
+        dispatch(clearPost());
     }
     let handleDraft=(event)=>{
-        event.preventDefault();
-        setDraft((prevDrafts)=>{
-            return [...prevDrafts,{id:uuidv4(),post:post,platform:platform}]
-        })
-        setPost("");
-        setPlatform([]);
+        dispatch(saveDrafts());
         alert("Draft saved!");
     }
     let handleEditDraft=(draft)=>{
-        if(post.length >0){
-            setDraft((prevDrafts)=>{
-                return [...prevDrafts,{id:uuidv4(),post:post,platform:platform}]
-            })
-        }
-        setPost(draft.post);
-        setPlatform(draft.platform);
-        setDraft((prevDrafts)=>prevDrafts.filter((item) => item.id !== draft.id))
+        dispatch(editDrafts(draft.id));
     }
     let handleDeleteDraft=(draft)=>{
-        setDraft((prevDrafts)=> prevDrafts.filter((item)=> item.id !== draft.id));
+        dispatch(deleteDraft(draft.id));
     }
     
     return(
@@ -73,7 +72,7 @@ export default function LandingPage(){
                 <button type="submit" disabled={platform.length==0 || count>min || post.trim()===""}>Submit</button>
                 <button type="button" onClick={handleDraft} disabled={post.trim() === "" || platform.length==0}>Draft</button>
                 <hr />
-                <DraftPage draft={draft} setDraft={setDraft} handleEditDraft={handleEditDraft} handleDeleteDraft={handleDeleteDraft}/>
+                <DraftPage draft={drafts} handleEditDraft={handleEditDraft} handleDeleteDraft={handleDeleteDraft}/>
             </form>
         </>
     )

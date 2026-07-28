@@ -47,7 +47,7 @@ export const postSlice=createSlice({
                     platform:[...state.platform],
                 });
             }
-            state.post=drat.post;
+            state.post=draft.post;
             state.platform=[...draft.platform];
 
             state.drafts=state.drafts.filter((item)=> item.id !== action.payload);
