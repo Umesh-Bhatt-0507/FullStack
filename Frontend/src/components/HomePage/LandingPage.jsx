@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DraftPage from "./DraftPage";
 import {v4 as uuidv4} from 'uuid'
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
     addPlatform,
@@ -14,6 +15,15 @@ import {
 } from "../../features/post/postSlice";
 
 export default function LandingPage(){
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("role");
+        navigate("/");
+    };
+    
+    const role = localStorage.getItem("role");
+    console.log("Landing role:", role);
     const limits = {
         twitter: 280,
         instagram: 2200,
@@ -57,6 +67,7 @@ export default function LandingPage(){
     return(
         <>
             <form onSubmit={handleSubmit}>
+                <button onClick={handleLogout}>Logout</button>
                 <h1>Post Composer</h1><hr />
                 <div className="platforms">
                     <label htmlFor="instagram">Instagram</label>
@@ -69,10 +80,10 @@ export default function LandingPage(){
                 <textarea name="post" id="post" placeholder="Write your post here..." onChange={handleChange} value={post}></textarea>
                 <p >Count : {count}/ {platform.length>0?min:0}</p>
                 <p>{count>min && "reduce size" }</p>
-                <button type="submit" disabled={platform.length==0 || count>min || post.trim()===""}>Submit</button>
-                <button type="button" onClick={handleDraft} disabled={post.trim() === "" || platform.length==0}>Draft</button>
+                <button type="submit" disabled={role === "viewer" ||  platform.length==0 || count>min || post.trim()===""}>Submit</button>
+                <button type="button" onClick={handleDraft} disabled={role === "viewer" || post.trim() === "" || platform.length==0}>Draft</button>
                 <hr />
-                <DraftPage draft={drafts} handleEditDraft={handleEditDraft} handleDeleteDraft={handleDeleteDraft}/>
+                <DraftPage draft={drafts} role={role} handleEditDraft={handleEditDraft} handleDeleteDraft={handleDeleteDraft}/>
             </form>
         </>
     )

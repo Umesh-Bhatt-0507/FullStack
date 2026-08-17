@@ -3,7 +3,7 @@ import { createSlice ,nanoid} from '@reduxjs/toolkit'
 const initialState={
     platform:[],
     post:"",
-    drafts:[],
+    drafts: JSON.parse(localStorage.getItem("drafts")) || [],
 }
 
 export const postSlice=createSlice({
@@ -23,14 +23,19 @@ export const postSlice=createSlice({
             state.post="";
             state.platform=[];
         },
-        saveDrafts(state){
-            state.drafts.push({
-                id:nanoid(),
-                post:state.post,
-                platform:[...state.platform],
-            })
-            state.post="";
-            state.platform=[];
+        saveDrafts(state) {
+            const newDraft = {
+                id: nanoid(),
+                post: state.post,
+                platform: [...state.platform],
+            };
+
+            state.drafts.push(newDraft);
+
+            localStorage.setItem("drafts", JSON.stringify(state.drafts));
+
+            state.post = "";
+            state.platform = [];
         },
         deleteDraft(state,action) {
             state.drafts=state.drafts.filter((draft)=>draft.id !== action.payload);

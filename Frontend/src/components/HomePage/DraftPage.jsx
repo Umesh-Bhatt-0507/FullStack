@@ -1,4 +1,4 @@
-function DraftPage({draft,handleEditDraft,handleDeleteDraft}){
+function DraftPage({draft,role,handleEditDraft,handleDeleteDraft}){
     return(
         <>
             <h4>Drafts</h4>
@@ -6,8 +6,8 @@ function DraftPage({draft,handleEditDraft,handleDeleteDraft}){
                 return  <div key={el.id}>
                             <p>Post : {el.post}</p>
                             <p>Platform : {el.platform+""}</p>
-                            <button type="button" onClick={()=> handleEditDraft(el)}>Edit</button> <br /><br />
-                            <button type="button" onClick={()=> handleDeleteDraft(el)}>Delete</button> <br /><br />
+                            {role !=="viewer" && (<button type="button" onClick={()=> handleEditDraft(el)}>Edit</button>)}
+                            {role ==="admin" && (<button type="button" onClick={()=> handleDeleteDraft(el)}>Delete</button>)}       
                         </div>
             })}
         </>
