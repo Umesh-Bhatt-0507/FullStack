@@ -1,3 +1,4 @@
+import './DraftPage.css'
 function DraftPage({draft,role,handleEditDraft,handleDeleteDraft}){
     return(
         <>

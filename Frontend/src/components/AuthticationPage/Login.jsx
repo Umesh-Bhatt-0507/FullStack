@@ -1,5 +1,6 @@
 import {useState} from "react";
 import React from "react";
+import './Login.css'
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -30,7 +31,7 @@ function Login() {
     };
 
     return (
-        <div>
+        <div className="login-container">
             <h1>Login</h1>
             <input
                 placeholder="Username"

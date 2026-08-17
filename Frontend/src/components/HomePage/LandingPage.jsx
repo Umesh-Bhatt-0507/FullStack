@@ -3,6 +3,7 @@ import DraftPage from "./DraftPage";
 import {v4 as uuidv4} from 'uuid'
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import './LandingPage.css'
 
 import {
     addPlatform,
@@ -21,7 +22,7 @@ export default function LandingPage(){
         localStorage.removeItem("role");
         navigate("/");
     };
-    
+
     const role = localStorage.getItem("role");
     console.log("Landing role:", role);
     const limits = {

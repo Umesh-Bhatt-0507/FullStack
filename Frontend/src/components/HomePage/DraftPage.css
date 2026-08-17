@@ -1,0 +1,33 @@
+h4 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+h4 + div {
+    margin-top: 10px;
+}
+
+h4 ~ div {
+    background: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+h4 ~ div p {
+    margin: 5px 0;
+}
+
+h4 ~ div button {
+    padding: 7px 14px;
+    margin: 10px 8px 0 0;
+    border: none;
+    border-radius: 5px;
+    background: #444;
+    color: white;
+}
+
+h4 ~ div button:hover {
+    background: #222;
+}
