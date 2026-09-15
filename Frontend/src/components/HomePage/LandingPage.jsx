@@ -49,11 +49,37 @@ export default function LandingPage(){
     let handleChange=(event)=>{
         dispatch(setPost(event.target.value));
     }
-    let handleSubmit=(event)=>{
+    let handleSubmit = async (event) => {
         event.preventDefault();
-        alert("Post submitted successfully!");
-        dispatch(clearPost());
-    }
+
+        const newPost = {
+            content: post,
+            platform: platform.join(","),
+        };
+
+        try {
+            const response = await fetch("http://localhost:8080/api/posts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newPost),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert("Post submitted successfully!");
+                dispatch(clearPost());
+            } else {
+                alert(result.message);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Could not connect to backend");
+        }
+    };
     let handleDraft=(event)=>{
         dispatch(saveDrafts());
         alert("Draft saved!");
