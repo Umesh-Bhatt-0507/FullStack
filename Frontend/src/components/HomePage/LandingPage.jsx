@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import DraftPage from "./DraftPage";
 import {v4 as uuidv4} from 'uuid'
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +13,8 @@ import {
     saveDrafts,
     deleteDraft,
     editDrafts,
+    createPost,
+    fetchPosts,
 } from "../../features/post/postSlice";
 
 export default function LandingPage(){
@@ -31,6 +33,9 @@ export default function LandingPage(){
         facebook: 3000,
     };
     const dispatch = useDispatch();
+    useEffect(() => {
+    dispatch(fetchPosts());
+    }, [dispatch]);
     const {platform,post,drafts } = useSelector(
         (state) => state.post
     );
@@ -49,11 +54,29 @@ export default function LandingPage(){
     let handleChange=(event)=>{
         dispatch(setPost(event.target.value));
     }
-    let handleSubmit=(event)=>{
-        event.preventDefault();
-        alert("Post submitted successfully!");
+    let handleSubmit = async (event) => {
+
+    event.preventDefault();
+
+    try {
+
+        const result = await dispatch(
+            createPost({
+                post: post,
+                platform: platform,
+            })
+        ).unwrap();
+
+        alert(result.message);
+
         dispatch(clearPost());
+
+    } catch (error) {
+
+        alert("Failed to submit post: " + error);
+
     }
+}
     let handleDraft=(event)=>{
         dispatch(saveDrafts());
         alert("Draft saved!");
